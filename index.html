@@ -503,40 +503,52 @@ function updateTicker(items) {
 async function loadAll() {
   const monthPadded = String(MONTH).padStart(2, '0');
   const dayPadded   = String(DAY).padStart(2, '0');
-  const datePattern = `-${monthPadded}-${dayPadded}`;
 
-  // --- NEWS ---
-  setStatus('news', 'loading', `Searching Archive for broadcasts on this date...`);
+  setStatus('news', 'loading', `Searching Archive for broadcasts on ${MONTHS_FULL[now.getMonth()]} ${DAY}...`);
+  setStatus('ad',   'loading', 'Fetching vintage commercials...');
+
   try {
-    // Query 1: date-specific news
-    const newsQuery = `date:${datePattern} AND (mediatype:movies) AND (subject:"news" OR subject:"television" OR title:"news" OR title:"report" OR collection:tvarchive)`;
-    let newsItems = await fetchFromArchive(newsQuery, 16);
+    let newsItems = [], adItems = [];
 
-    // If sparse, broaden to month/genre
-    if (newsItems.length < 4) {
-      const broadQuery = `(subject:"news broadcast" OR subject:"television news" OR collection:tvarchive) AND mediatype:movies`;
-      const extra = await fetchFromArchive(broadQuery, 12);
-      newsItems = [...newsItems, ...extra].slice(0, 16);
+    // 1. Try backend /api/today first
+    try {
+      const r = await fetch(`${API_BASE}/today`, { signal: AbortSignal.timeout(12000) });
+      if (r.ok) { const d = await r.json(); newsItems = d.news || []; adItems = d.commercials || []; }
+    } catch(e) { /* proxy unavailable, fall through */ }
+
+    // 2. Direct Archive.org fallback — use Solr date ranges per year (wildcard -MM-DD is NOT supported)
+    if (newsItems.length === 0) {
+      const ranges = [];
+      for (let y = 1980; y <= 2015; y++)
+        ranges.push(`date:[${y}-${monthPadded}-${dayPadded}T00:00:00Z TO ${y}-${monthPadded}-${dayPadded}T23:59:59Z]`);
+      const q = `collection:tvnews AND (${ranges.join(' OR ')})`;
+      const url = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(q)}`
+        + `&fl[]=identifier,title,date,description,subject,year&rows=24&output=json&sort[]=date+desc`;
+      const r = await fetch(url);
+      const d = await r.json();
+      newsItems = d.response?.docs || [];
+    }
+
+    if (adItems.length === 0) {
+      const q = `subject:"television commercial" OR subject:"TV commercial" OR subject:"vintage commercial" OR subject:"television commercials"`;
+      const url = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(q)}`
+        + `&fl[]=identifier,title,date,description,subject,year&rows=20&output=json`;
+      const r = await fetch(url);
+      const d = await r.json();
+      adItems = d.response?.docs || [];
     }
 
     renderCards(newsItems, 'news-cards', false);
-    setStatus('news', 'live', `${newsItems.length} broadcasts found via Internet Archive API`);
+    setStatus('news', newsItems.length > 0 ? 'live' : 'error',
+      newsItems.length > 0
+        ? `${newsItems.length} broadcasts found for ${MONTHS_FULL[now.getMonth()]} ${DAY}`
+        : 'No broadcasts found — Archive may not have coverage for this date');
     updateTicker(newsItems);
 
-    // --- COMMERCIALS ---
-    setStatus('ad', 'loading', 'Fetching vintage commercials...');
-    const adQuery = `(subject:"commercials" OR subject:"television commercials" OR subject:"advertisements" OR collection:classic_tv_commercials) AND mediatype:movies`;
-    let adItems = await fetchFromArchive(adQuery, 12);
-
-    if (adItems.length < 4) {
-      const adQuery2 = `collection:classic_tv_commercials`;
-      adItems = await fetchFromArchive(adQuery2, 12);
-    }
-
     renderCards(adItems, 'ad-cards', true);
-    setStatus('ad', 'live', `${adItems.length} vintage commercials loaded`);
+    setStatus('ad', adItems.length > 0 ? 'live' : 'error',
+      adItems.length > 0 ? `${adItems.length} vintage commercials loaded` : 'No commercials found');
 
-    // Build the autoplay playlist
     buildPlaylist(newsItems.slice(0, 8), adItems.slice(0, 4));
 
   } catch (err) {

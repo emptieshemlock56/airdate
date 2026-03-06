@@ -110,40 +110,61 @@ app.get('/api/item/:identifier', async (req, res) => {
 });
 
 // ── THIS DAY ENDPOINT ─────────────────────────────────────────────────────────
-// GET /api/today  — convenience endpoint that returns news + commercials for today's M/D
+// GET /api/today  — returns news + commercials for today's M/D across all years
 app.get('/api/today', async (req, res) => {
   const now   = new Date();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day   = String(now.getDate()).padStart(2, '0');
-  const datePattern = `-${month}-${day}`;
 
-  const cacheKey = `today:${datePattern}`;
+  const cacheKey = `today:${month}-${day}`;
   const cached = getCached(cacheKey);
   if (cached) return res.json(cached);
 
+  // Build an OR of every year we want to match for this month+day.
+  // Archive.org's Solr index supports date range queries per full ISO date,
+  // so we union exact day-windows across decades (1980–2010).
+  // This is the most reliable approach — the wildcard date:-MM-DD syntax
+  // is NOT supported by Archive's Solr and always returns 0 results.
+  const years = [];
+  for (let y = 1980; y <= 2010; y++) years.push(y);
+
+  const dateRanges = years
+    .map(y => `date:[${y}-${month}-${day}T00:00:00Z TO ${y}-${month}-${day}T23:59:59Z]`)
+    .join(' OR ');
+
+  const newsQuery   = `collection:tvnews AND (${dateRanges})`;
+  const adQuery     = `collection:tvarchive AND (subject:"commercial" OR subject:"advertisement" OR title:"commercial")`;
+  const adFallback  = `subject:"television commercial" OR subject:"TV commercial" OR subject:"vintage commercial"`;
+
+  const FIELDS = 'identifier,title,date,description,subject,year';
+  const BASE   = 'https://archive.org/advancedsearch.php';
+
+  const archiveFetch = (q, rows = 20) =>
+    fetch(`${BASE}?q=${encodeURIComponent(q)}&fl[]=${FIELDS}&rows=${rows}&output=json&sort[]=date+desc`,
+      { signal: AbortSignal.timeout(10000), headers: { 'User-Agent': 'AIRDATE/1.0' } }
+    ).then(r => r.json()).then(d => d.response?.docs || []);
+
   try {
-    // Run news + commercial queries in parallel
-    const [newsRes, adRes] = await Promise.all([
-      fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(
-        `date:${datePattern} AND (subject:"news" OR subject:"television" OR collection:tvarchive) AND mediatype:movies`
-      )}&fl[]=identifier,title,date,description,subject,year&rows=20&output=json`),
-      fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(
-        `collection:classic_tv_commercials`
-      )}&fl[]=identifier,title,date,description,subject,year&rows=20&output=json`)
+    const [newsDocs, adDocs] = await Promise.all([
+      archiveFetch(newsQuery, 24),
+      archiveFetch(adQuery, 20).then(async docs => {
+        if (docs.length < 4) return archiveFetch(adFallback, 20);
+        return docs;
+      })
     ]);
 
-    const newsData = await newsRes.json();
-    const adData   = await adRes.json();
+    console.log(`[today] ${month}-${day}: ${newsDocs.length} news, ${adDocs.length} ads`);
 
     const result = {
       date: `${month}-${day}`,
-      news:        newsData.response?.docs || [],
-      commercials: adData.response?.docs   || []
+      news:        newsDocs,
+      commercials: adDocs
     };
 
     setCached(cacheKey, result);
     res.json(result);
   } catch (err) {
+    console.error('today endpoint error:', err.message);
     res.status(504).json({ error: 'Archive.org timeout', detail: err.message });
   }
 });
