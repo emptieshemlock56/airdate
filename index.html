@@ -7,158 +7,193 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f; --surface: #111118; --card: #16161f; --border: #2a2a3a;
-    --accent: #e8c84a; --accent2: #e05a2b; --text: #d8d8e8; --muted: #666680;
-    --scan: rgba(255,255,255,0.015);
+    --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a;
+    --accent:#e8c84a; --accent2:#e05a2b; --text:#d8d8e8; --muted:#666680;
+    --scan:rgba(255,255,255,0.015);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scan) 2px, var(--scan) 4px); }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scan) 2px,var(--scan) 4px);}
 
-  /* HEADER */
-  header { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 64px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.12em; color: var(--accent); text-shadow: 0 0 20px rgba(232,200,74,0.4); }
-  .logo span { color: var(--accent2); }
-  .live-badge { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
-  .live-dot { width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-  .header-date { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--muted); text-align: right; }
-  .header-date strong { display: block; color: var(--text); font-size: 0.85rem; }
+  /* NAV */
+  header{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100;}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.12em;color:var(--accent);text-shadow:0 0 20px rgba(232,200,74,0.4);}
+  .logo span{color:var(--accent2);}
+  nav{display:flex;gap:0;}
+  .nav-btn{background:none;border:none;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;padding:0 1.2rem;height:64px;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s;}
+  .nav-btn:hover{color:var(--text);}
+  .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .live-badge{display:flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.15em;}
+  .live-dot{width:8px;height:8px;background:var(--accent2);border-radius:50%;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
 
   /* TICKER */
-  .ticker-wrap { background: var(--accent); color: #000; height: 32px; overflow: hidden; display: flex; align-items: center; }
-  .ticker-label { background: var(--accent2); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.1em; padding: 0 1rem; height: 100%; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
-  .ticker-inner { overflow: hidden; flex: 1; }
-  .ticker-track { display: flex; animation: ticker 60s linear infinite; white-space: nowrap; }
-  .ticker-track span { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding-right: 4rem; }
-  .ticker-track .year-tag { color: #8b4000; font-weight: 700; margin-right: 0.4rem; }
-  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .ticker-wrap{background:var(--accent);color:#000;height:32px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--accent2);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.1em;padding:0 1rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-inner{overflow:hidden;flex:1;}
+  .ticker-track{display:flex;animation:ticker 60s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.05em;padding-right:4rem;}
+  .ticker-track .year-tag{color:#7a3800;font-weight:700;margin-right:0.4rem;}
+  @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-  /* LAYOUT */
-  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-
-  /* FEATURED */
-  .featured { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; margin-bottom: 3rem; }
-
-  /* PLAYER — no ::after overlay so iframe controls are fully usable */
-  .player-wrap { position: relative; background: #000; border: 1px solid var(--border); aspect-ratio: 16/9; overflow: hidden; }
-  .player-wrap iframe { width: 100%; height: 100%; border: 0; display: block; position: relative; z-index: 1; }
-  .player-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.7rem 1rem; background: linear-gradient(transparent, rgba(0,0,0,0.85)); z-index: 2; pointer-events: none; }
-  .now-playing { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.2rem; }
-  .player-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.2; }
-
-  /* COMMERCIAL BREAK OVERLAY */
-  .break-overlay { display: none; position: absolute; inset: 0; background: #000; z-index: 10; flex-direction: column; }
-  .break-overlay.active { display: flex; }
-  .break-overlay iframe { width: 100%; flex: 1; border: 0; }
-  .break-banner { background: var(--accent2); padding: 0.3rem 1rem; display: flex; align-items: center; justify-content: space-between; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: #fff; letter-spacing: 0.1em; flex-shrink: 0; }
-  .break-countdown { color: var(--accent); font-weight: bold; }
-  .break-skip { background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; padding: 2px 8px; cursor: pointer; letter-spacing: 0.1em; }
-  .break-skip:hover { background: rgba(255,255,255,0.1); }
-
-  /* QUEUE */
-  .queue { display: flex; flex-direction: column; border: 1px solid var(--border); overflow: hidden; max-height: 500px; overflow-y: auto; }
-  .queue-header { background: var(--surface); padding: 0.75rem 1rem; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.15em; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; position: sticky; top: 0; z-index: 1; }
-  .queue-header span { color: var(--accent); }
-  .queue-item { display: flex; align-items: center; gap: 0.9rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; background: var(--card); text-decoration: none; color: inherit; }
-  .queue-item:last-child { border-bottom: 0; }
-  .queue-item:hover { background: #1e1e2a; }
-  .queue-item.active { background: #1a1a28; border-left: 3px solid var(--accent); }
-  .queue-item.is-break { border-left: 3px solid var(--accent2); }
-  .queue-thumb { width: 90px; height: 54px; background: #000; flex-shrink: 0; position: relative; overflow: hidden; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-  .queue-thumb.break-thumb { background: linear-gradient(135deg, #1a0800 0%, #2a1000 100%); }
-  .queue-year { position: absolute; bottom: 2px; right: 4px; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent); background: rgba(0,0,0,0.8); padding: 1px 3px; }
-  .queue-info { flex: 1; min-width: 0; }
-  .queue-network { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.15rem; }
-  .queue-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-  .queue-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
-
-  /* SECTION HEADERS + YEAR FILTER */
-  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; margin-top: 2.5rem; flex-wrap: wrap; }
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text); }
-  .section-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
-  .year-filter { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
-  .year-filter label { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-  .year-select {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; padding: 0.35rem 0.6rem;
-    cursor: pointer; appearance: none; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666680'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 0.5rem center;
-    padding-right: 1.8rem; min-width: 100px;
-  }
-  .year-select:focus { outline: 1px solid var(--accent); }
-  .year-select option { background: var(--surface); }
-
-  /* CARDS */
-  .cards-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 0.5rem; }
-  .card { background: var(--card); cursor: pointer; transition: background 0.15s; text-decoration: none; color: inherit; display: block; }
-  .card:hover { background: #1e1e2a; }
-  .card:hover .card-title { color: var(--accent); }
-  .card.break-card:hover .card-title { color: var(--accent2); }
-  .card-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #0d0d15 0%, #1a1a28 100%); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-  .card-thumb.break-bg { background: linear-gradient(135deg, #120800 0%, #1f1000 100%); }
-  .card-year-badge { position: absolute; top: 8px; left: 8px; border: 1px solid var(--accent); color: var(--accent); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; padding: 2px 6px; background: rgba(0,0,0,0.85); }
-  .card-year-badge.break { border-color: var(--accent2); color: var(--accent2); }
-  .card-body { padding: 0.8rem; border-top: 1px solid var(--border); }
-  .card-network { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
-  .card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; font-weight: 700; line-height: 1.3; transition: color 0.15s; margin-bottom: 0.3rem; }
-  .card-date { font-size: 0.72rem; color: var(--muted); }
-
-  /* LOADING */
-  .loading-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-  .loading-card { background: var(--card); aspect-ratio: 16/9; position: relative; overflow: hidden; }
-  .loading-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); animation: shimmer 1.5s infinite; }
-  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
-
-  /* API STATUS */
-  .api-status { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 0.5rem; }
-  .api-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
-  .api-dot.live { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
-  .api-dot.loading { background: var(--accent); animation: pulse 1s infinite; }
-  .api-dot.error { background: var(--accent2); }
-
-  /* MODAL */
-  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 500; align-items: center; justify-content: center; padding: 2rem; }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); width: 100%; max-width: 900px; position: relative; }
-  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.6rem; cursor: pointer; z-index: 10; transition: all 0.15s; }
-  .modal-close:hover { color: var(--text); border-color: var(--text); }
-  .modal-player { aspect-ratio: 16/9; background: #000; }
-  .modal-player iframe { width: 100%; height: 100%; border: 0; display: block; }
-  .modal-info { padding: 1.2rem; }
-  .modal-network { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
-  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-  .modal-meta { font-size: 0.8rem; color: var(--muted); }
-  .modal-meta a { color: var(--accent); text-decoration: none; margin-left: 1rem; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; }
-  .modal-meta a:hover { text-decoration: underline; }
-  .modal-desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; line-height: 1.6; max-height: 80px; overflow-y: auto; }
+  /* PAGES */
+  .page{display:none;}.page.active{display:block;}
+  .container{max-width:1400px;margin:0 auto;padding:2rem;}
 
   /* TODAY BANNER */
-  .today-banner { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-  .today-label { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: var(--accent); }
-  .today-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; }
-  .today-date { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); }
+  .today-banner{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .today-label{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;line-height:1;color:var(--accent);}
+  .today-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.2em;}
+  .today-date{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text);}
 
-  /* NO RESULTS */
-  .no-results { padding: 1.5rem; color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; border: 1px solid var(--border); }
+  /* FEATURED PLAYER */
+  .featured{display:grid;grid-template-columns:1fr 380px;gap:2rem;margin-bottom:3rem;}
+  .player-wrap{position:relative;background:#000;border:1px solid var(--border);aspect-ratio:16/9;overflow:hidden;}
+  .player-wrap iframe{width:100%;height:100%;border:0;display:block;position:relative;z-index:1;}
+  .player-overlay{position:absolute;bottom:0;left:0;right:0;padding:0.7rem 1rem;background:linear-gradient(transparent,rgba(0,0,0,0.85));z-index:2;pointer-events:none;}
+  .now-playing{display:flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.2rem;}
+  .player-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:#fff;line-height:1.2;}
+  .duration-badge{display:inline-block;background:rgba(232,200,74,0.15);border:1px solid var(--accent);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:1px 5px;margin-left:0.5rem;vertical-align:middle;}
+
+  /* BREAK OVERLAY */
+  .break-overlay{display:none;position:absolute;inset:0;background:#000;z-index:10;flex-direction:column;}
+  .break-overlay.active{display:flex;}
+  .break-overlay iframe{width:100%;flex:1;border:0;}
+  .break-banner{background:var(--accent2);padding:0.3rem 1rem;display:flex;align-items:center;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:#fff;letter-spacing:0.1em;flex-shrink:0;}
+  .break-countdown{color:var(--accent);font-weight:bold;}
+  .break-skip{background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:2px 8px;cursor:pointer;letter-spacing:0.1em;}
+  .break-skip:hover{background:rgba(255,255,255,0.1);}
+
+  /* QUEUE */
+  .queue{display:flex;flex-direction:column;border:1px solid var(--border);overflow:hidden;max-height:500px;overflow-y:auto;}
+  .queue-header{background:var(--surface);padding:0.75rem 1rem;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;color:var(--muted);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;position:sticky;top:0;z-index:1;}
+  .queue-header em{color:var(--accent);}
+  .queue-item{display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;background:var(--card);text-decoration:none;color:inherit;}
+  .queue-item:last-child{border-bottom:0;}
+  .queue-item:hover{background:#1e1e2a;}
+  .queue-item.active{background:#1a1a28;border-left:3px solid var(--accent);}
+  .queue-item.is-break{border-left:3px solid var(--accent2);}
+  .queue-thumb{width:90px;height:54px;background:#000;flex-shrink:0;position:relative;overflow:hidden;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+  .queue-thumb.break-thumb{background:linear-gradient(135deg,#1a0800,#2a1000);}
+  .queue-year{position:absolute;bottom:2px;right:4px;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--accent);background:rgba(0,0,0,0.8);padding:1px 3px;}
+  .queue-info{flex:1;min-width:0;}
+  .queue-network{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.15rem;}
+  .queue-title{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+  .queue-meta{font-size:0.7rem;color:var(--muted);margin-top:0.15rem;}
+
+  /* SECTION HEADERS */
+  .section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;margin-top:2.5rem;flex-wrap:wrap;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);}
+  .section-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.15em;}
+  .year-filter{margin-left:auto;display:flex;align-items:center;gap:0.5rem;}
+  .year-filter label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;}
+  .year-select{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:0.35rem 1.8rem 0.35rem 0.6rem;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666680'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;min-width:100px;}
+  .year-select:focus{outline:1px solid var(--accent);}
+  .year-select option{background:var(--surface);}
+
+  /* CARDS */
+  .cards-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:0.5rem;}
+  .card{background:var(--card);cursor:pointer;transition:background 0.15s;text-decoration:none;color:inherit;display:block;}
+  .card:hover{background:#1e1e2a;}
+  .card:hover .card-title{color:var(--accent);}
+  .card.break-card:hover .card-title{color:var(--accent2);}
+  .card-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,#0d0d15,#1a1a28);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2rem;}
+  .card-thumb.break-bg{background:linear-gradient(135deg,#120800,#1f1000);}
+  .card-year-badge{position:absolute;top:8px;left:8px;border:1px solid var(--accent);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.7rem;padding:2px 6px;background:rgba(0,0,0,0.85);}
+  .card-year-badge.break{border-color:var(--accent2);color:var(--accent2);}
+  .card-duration{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.85);color:#4caf50;font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:1px 5px;border:1px solid rgba(76,175,80,0.4);}
+  .card-body{padding:0.8rem;border-top:1px solid var(--border);}
+  .card-network{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem;}
+  .card-title{font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:700;line-height:1.3;transition:color 0.15s;margin-bottom:0.3rem;}
+  .card-date{font-size:0.72rem;color:var(--muted);}
+
+  /* API STATUS */
+  .api-status{display:flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;}
+  .api-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);}
+  .api-dot.live{background:#4caf50;box-shadow:0 0 6px #4caf50;}
+  .api-dot.loading{background:var(--accent);animation:pulse 1s infinite;}
+  .api-dot.error{background:var(--accent2);}
+
+  /* ── GUIDE VIEW ─────────────────────────────────────────────────────────── */
+  .guide-wrap{margin-top:1rem;}
+  .guide-loading{padding:3rem;text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--muted);}
+
+  /* NETWORK ROW */
+  .network-row{margin-bottom:2.5rem;}
+  .network-header{display:flex;align-items:center;gap:1rem;margin-bottom:0.8rem;padding-bottom:0.6rem;border-bottom:2px solid var(--border);}
+  .network-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.08em;min-width:120px;}
+  .network-count{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);}
+  .network-scroll{display:flex;gap:1px;overflow-x:auto;background:var(--border);border:1px solid var(--border);scrollbar-width:thin;scrollbar-color:var(--border) var(--bg);}
+  .network-scroll::-webkit-scrollbar{height:4px;}
+  .network-scroll::-webkit-scrollbar-track{background:var(--bg);}
+  .network-scroll::-webkit-scrollbar-thumb{background:var(--border);}
+
+  /* GUIDE CARD — fixed width horizontal scroll */
+  .guide-card{background:var(--card);cursor:pointer;transition:background 0.15s;flex-shrink:0;width:200px;text-decoration:none;color:inherit;display:block;}
+  .guide-card:hover{background:#1e1e2a;}
+  .guide-card:hover .guide-card-title{color:var(--accent);}
+  .guide-card-thumb{width:200px;height:112px;background:linear-gradient(135deg,#0d0d15,#1a1a28);position:relative;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;}
+  .guide-card-year{position:absolute;top:6px;left:6px;border:1px solid var(--accent);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;padding:1px 5px;background:rgba(0,0,0,0.85);}
+  .guide-card-duration{position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.85);color:#4caf50;font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:1px 4px;border:1px solid rgba(76,175,80,0.4);}
+  .guide-card-full-badge{position:absolute;top:6px;right:6px;background:rgba(76,175,80,0.2);border:1px solid #4caf50;color:#4caf50;font-family:'Share Tech Mono',monospace;font-size:0.55rem;padding:1px 4px;}
+  .guide-card-body{padding:0.6rem 0.7rem;border-top:1px solid var(--border);}
+  .guide-card-title{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;line-height:1.3;transition:color 0.15s;margin-bottom:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .guide-card-date{font-size:0.68rem;color:var(--muted);}
+
+  /* NETWORK COLOR ACCENTS */
+  .net-CNN .network-logo{color:#cc0000;}
+  .net-FOX .network-logo, .net-FOX\ NEWS .network-logo{color:#003580;}
+  .net-MSNBC .network-logo{color:#0078d4;}
+  .net-CBS .network-logo{color:#00589b;}
+  .net-NBC .network-logo{color:#fa4616;}
+  .net-ABC .network-logo{color:#003087;}
+  .net-PBS .network-logo{color:#00a0e3;}
+  .net-CNBC .network-logo{color:#0033a0;}
+  .net-HLN .network-logo{color:#cc0000;}
+  .net-C-SPAN .network-logo{color:#004990;}
+
+  /* MODAL */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;padding:2rem;}
+  .modal-bg.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);width:100%;max-width:900px;position:relative;}
+  .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--border);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:0.3rem 0.6rem;cursor:pointer;z-index:10;transition:all 0.15s;}
+  .modal-close:hover{color:var(--text);border-color:var(--text);}
+  .modal-player{aspect-ratio:16/9;background:#000;}
+  .modal-player iframe{width:100%;height:100%;border:0;display:block;}
+  .modal-info{padding:1.2rem;}
+  .modal-network{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.3rem;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text);letter-spacing:0.05em;margin-bottom:0.3rem;}
+  .modal-meta{font-size:0.8rem;color:var(--muted);}
+  .modal-meta a{color:var(--accent);text-decoration:none;margin-left:1rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;}
+  .modal-meta a:hover{text-decoration:underline;}
+  .modal-desc{font-size:0.82rem;color:var(--muted);margin-top:0.6rem;line-height:1.6;max-height:80px;overflow-y:auto;}
+
+  /* LOADING SHIMMER */
+  .loading-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+  .loading-card{background:var(--card);aspect-ratio:16/9;position:relative;overflow:hidden;}
+  .loading-card::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent);animation:shimmer 1.5s infinite;}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .no-results{padding:1.5rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.7rem;border:1px solid var(--border);}
 
   /* FOOTER */
-  footer { margin-top: 4rem; padding: 2rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--muted); letter-spacing: 0.1em; }
-  .footer-note { font-size: 0.72rem; color: var(--muted); max-width: 500px; line-height: 1.6; text-align: right; }
-  .footer-note a { color: var(--accent); text-decoration: none; }
+  footer{margin-top:4rem;padding:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--muted);letter-spacing:0.1em;}
+  .footer-note{font-size:0.72rem;color:var(--muted);max-width:500px;line-height:1.6;text-align:right;}
+  .footer-note a{color:var(--accent);text-decoration:none;}
 
-  @media (max-width: 900px) { .featured { grid-template-columns: 1fr; } .queue { display: none; } }
-  @media (max-width: 600px) { .container { padding: 1rem; } header { padding: 0 1rem; } .header-date { display: none; } .cards-row { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width:900px){.featured{grid-template-columns:1fr;}.queue{display:none;}}
+  @media(max-width:600px){.container{padding:1rem;}header{padding:0 1rem;}.cards-row{grid-template-columns:repeat(2,1fr);}.nav-btn{font-size:0.8rem;padding:0 0.7rem;}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">AIRDATE<span>TV</span></div>
+  <nav>
+    <button class="nav-btn active" onclick="showPage('home',this)">TODAY</button>
+    <button class="nav-btn" onclick="showPage('guide',this)">GUIDE</button>
+  </nav>
   <div class="live-badge"><div class="live-dot"></div> Live from the Archive</div>
-  <div class="header-date"><span>Broadcast Date</span><strong id="header-date">—</strong></div>
 </header>
 
 <div class="ticker-wrap">
@@ -171,6 +206,8 @@
   </div>
 </div>
 
+<!-- ═══════════════════════ HOME PAGE ═══════════════════════ -->
+<div id="page-home" class="page active">
 <div class="container">
 
   <div class="today-banner">
@@ -181,10 +218,9 @@
     </div>
   </div>
 
-  <!-- FEATURED PLAYER -->
   <div class="featured">
-    <div class="player-wrap" id="main-player-wrap">
-      <iframe id="main-iframe" src="about:blank" allowfullscreen allow="fullscreen; autoplay"></iframe>
+    <div class="player-wrap">
+      <iframe id="main-iframe" src="about:blank" allowfullscreen allow="fullscreen;autoplay"></iframe>
       <div class="break-overlay" id="break-overlay">
         <div class="break-banner">
           <span>📺 &nbsp;COMMERCIAL BREAK</span>
@@ -193,43 +229,36 @@
             <button class="break-skip" onclick="skipBreak()">SKIP ▶</button>
           </div>
         </div>
-        <iframe id="break-iframe" src="about:blank" allowfullscreen allow="fullscreen; autoplay"></iframe>
+        <iframe id="break-iframe" src="about:blank" allowfullscreen allow="fullscreen;autoplay"></iframe>
       </div>
-      <div class="player-overlay" id="player-overlay">
-        <div class="now-playing"><div class="live-dot"></div> <span id="now-playing-label">Loading...</span></div>
+      <div class="player-overlay">
+        <div class="now-playing"><div class="live-dot"></div><span id="now-playing-label">Loading...</span></div>
         <div class="player-title" id="main-title">Connecting to Internet Archive...</div>
       </div>
     </div>
-
-    <div class="queue" id="queue">
-      <div class="queue-header"><span>▶</span> <span id="queue-header-text">TODAY'S SCHEDULE</span></div>
-      <div id="queue-items">
-        <div style="padding:1.5rem; text-align:center; color:var(--muted); font-family:'Share Tech Mono',monospace; font-size:0.7rem;">LOADING SCHEDULE...</div>
-      </div>
+    <div class="queue">
+      <div class="queue-header"><em>▶</em>&nbsp;TODAY'S SCHEDULE</div>
+      <div id="queue-items"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.7rem;">LOADING...</div></div>
     </div>
   </div>
 
-  <!-- NEWS SECTION -->
-  <div class="api-status" id="news-api-status">
+  <div class="api-status">
     <div class="api-dot loading" id="news-dot"></div>
     <span id="news-status-text">Querying Internet Archive...</span>
   </div>
   <div class="section-header">
     <div class="section-title">News Broadcasts</div>
-    <div class="section-sub" id="news-section-sub">This date across all years</div>
+    <div class="section-sub" id="news-section-sub">This date — all years</div>
     <div class="year-filter">
-      <label>Filter by year</label>
+      <label>Year</label>
       <select class="year-select" id="year-select" onchange="filterByYear(this.value)">
         <option value="all">All Years</option>
       </select>
     </div>
   </div>
-  <div id="news-cards">
-    <div class="loading-row"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
-  </div>
+  <div id="news-cards"><div class="loading-row"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div></div>
 
-  <!-- COMMERCIALS SECTION -->
-  <div class="api-status" id="ad-api-status" style="margin-top:2rem;">
+  <div class="api-status" style="margin-top:2rem;">
     <div class="api-dot loading" id="ad-dot"></div>
     <span id="ad-status-text">Fetching vintage commercials...</span>
   </div>
@@ -237,17 +266,40 @@
     <div class="section-title" style="color:var(--accent2);">📺 Commercial Breaks</div>
     <div class="section-sub">A word from our sponsors — vintage American ads</div>
   </div>
-  <div id="ad-cards">
-    <div class="loading-row"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
+  <div id="ad-cards"><div class="loading-row"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div></div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════ GUIDE PAGE ═══════════════════════ -->
+<div id="page-guide" class="page">
+<div class="container">
+
+  <div class="today-banner">
+    <div class="today-label" id="guide-label">—</div>
+    <div>
+      <div class="today-sub">Program Guide</div>
+      <div class="today-date">Browse by Network</div>
+    </div>
   </div>
 
+  <div class="api-status">
+    <div class="api-dot loading" id="guide-dot"></div>
+    <span id="guide-status-text">Loading program guide...</span>
+  </div>
+
+  <div class="guide-wrap" id="guide-wrap">
+    <div class="guide-loading">📡 &nbsp;LOADING PROGRAM GUIDE...</div>
+  </div>
+
+</div>
 </div>
 
 <!-- MODAL -->
 <div class="modal-bg" id="modal" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
-    <div class="modal-player"><iframe id="modal-iframe" src="about:blank" allowfullscreen allow="fullscreen; autoplay"></iframe></div>
+    <div class="modal-player"><iframe id="modal-iframe" src="about:blank" allowfullscreen allow="fullscreen;autoplay"></iframe></div>
     <div class="modal-info">
       <div class="modal-network" id="modal-network"></div>
       <div class="modal-title" id="modal-title"></div>
@@ -259,309 +311,349 @@
 
 <footer>
   <div class="footer-logo">AIRDATETV © 2026</div>
-  <div class="footer-note">
-    All content sourced live from the <a href="https://archive.org" target="_blank">Internet Archive</a>.
-    American public domain and open-license broadcasts only. Not affiliated with any network.
-  </div>
+  <div class="footer-note">All content from the <a href="https://archive.org" target="_blank">Internet Archive</a>. American public domain &amp; open-license broadcasts. Not affiliated with any network.</div>
 </footer>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const API_BASE = (window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')
   ? 'http://localhost:3000/api' : '/api';
 
-// ─── DATE ────────────────────────────────────────────────────────────────────
-const now = new Date();
-const MONTH = now.getMonth() + 1;
-const DAY   = now.getDate();
-const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-const MONTHS_FULL  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-document.getElementById('today-label').textContent  = MONTHS_SHORT[now.getMonth()] + ' ' + DAY;
-document.getElementById('today-date').textContent   = MONTHS_FULL[now.getMonth()] + ' ' + DAY + ' — Across All Years';
-document.getElementById('header-date').textContent  = MONTHS_FULL[now.getMonth()] + ' ' + DAY;
+// ─── DATE ─────────────────────────────────────────────────────────────────────
+const now    = new Date();
+const MONTH  = now.getMonth()+1;
+const DAY    = now.getDate();
+const MS     = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const MF     = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('today-label').textContent = MS[now.getMonth()]+' '+DAY;
+document.getElementById('guide-label').textContent = MS[now.getMonth()]+' '+DAY;
+document.getElementById('today-date').textContent  = MF[now.getMonth()]+' '+DAY+' — Across All Years';
 
-// ─── STATE ───────────────────────────────────────────────────────────────────
-let playlist = [];
-let currentIndex = 0;
-let breakTimer = null;
-let allNewsItems = [];  // full unfiltered list for year filter
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let playlist=[], currentIndex=0, breakTimer=null, allNewsItems=[], guideLoaded=false;
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-function getEmbedUrl(id)   { return `https://archive.org/embed/${id}`; }
-function getArchiveUrl(id) { return `https://archive.org/details/${id}`; }
-function truncate(s, n)    { return s && s.length > n ? s.slice(0,n)+'…' : (s||''); }
-function getYear(item)     { return item.year || (item.date ? item.date.slice(0,4) : '—'); }
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+const embed  = id => `https://archive.org/embed/${id}`;
+const detail = id => `https://archive.org/details/${id}`;
+const trunc  = (s,n) => s&&s.length>n?s.slice(0,n)+'…':(s||'');
+const getYear= i => i.year||(i.date?i.date.slice(0,4):'—');
 
-// Filter to US/American content only
-const NON_US_PATTERNS = /\b(BBC|ITV|SKY|CBC|ABC Australia|SBS|TVNZ|RTÉ|Channel 4|ITN|espreso|CCTV|NHK|Al Jazeera|DW|France|Ukraine|Syria|Sudan|Serbia|N1SRP|TTV|Taiwan|SYRIANNEWS|ESPRESO)\b/i;
-function isAmerican(item) {
-  const t = (item.title || '') + ' ' + (item.identifier || '');
-  return !NON_US_PATTERNS.test(t);
+function fmtDuration(len) {
+  if (!len) return null;
+  const parts = String(len).split(':').map(Number);
+  if (parts.length===3) {
+    if (parts[0]>0) return `${parts[0]}h ${parts[1]}m`;
+    return `${parts[1]}m`;
+  }
+  if (parts.length===2) return `${parts[0]}m`;
+  return null;
+}
+function isFullLength(item) {
+  if (!item.length) return false;
+  const p = String(item.length).split(':').map(Number);
+  const secs = p.length===3?p[0]*3600+p[1]*60+p[2]:p.length===2?p[0]*60+p[1]:0;
+  return secs >= 1200;
 }
 
-function guessEmoji(title='', subject='') {
-  const t = (title + (Array.isArray(subject) ? subject.join(' ') : subject||'')).toLowerCase();
-  if (t.includes('apollo')||t.includes('nasa')||t.includes('moon')||t.includes('space')) return '🌕';
-  if (t.includes('election')||t.includes('vote')||t.includes('president')||t.includes('campaign')) return '🗳';
-  if (t.includes('war')||t.includes('battle')||t.includes('military')||t.includes('iraq')||t.includes('vietnam')) return '⚔️';
-  if (t.includes('senate')||t.includes('congress')||t.includes('capitol')||t.includes('c-span')) return '🏛';
-  if (t.includes('weather')||t.includes('storm')||t.includes('hurricane')) return '🌩';
-  if (t.includes('sport')||t.includes('football')||t.includes('baseball')||t.includes('nfl')||t.includes('nba')) return '🏈';
-  if (t.includes('cnn')||t.includes('nbc')||t.includes('abc')||t.includes('cbs')||t.includes('fox')||t.includes('msnbc')) return '📡';
-  return '📺';
+const NON_US=/\b(BBC|ITV|SKY News|CBC|SBS|TVNZ|RTÉ|Channel 4|ITN|ESPRESO|CCTV|NHK|Al Jazeera|DW|SYRIANNEWS|N1SRP|TTV|SUDAN)\b/i;
+const isAmerican = i => !NON_US.test((i.title||'')+' '+(i.identifier||''));
+
+function guessEmoji(title='',subject='') {
+  const t=(title+(Array.isArray(subject)?subject.join(' '):subject||'')).toLowerCase();
+  if(t.includes('apollo')||t.includes('nasa')||t.includes('moon'))return'🌕';
+  if(t.includes('election')||t.includes('vote')||t.includes('president'))return'🗳';
+  if(t.includes('war')||t.includes('iraq')||t.includes('vietnam')||t.includes('military'))return'⚔️';
+  if(t.includes('senate')||t.includes('congress')||t.includes('c-span'))return'🏛';
+  if(t.includes('weather')||t.includes('storm')||t.includes('hurricane'))return'🌩';
+  if(t.includes('sport')||t.includes('football')||t.includes('nfl')||t.includes('nba'))return'🏈';
+  return'📺';
 }
 
-// ─── YEAR DROPDOWN ───────────────────────────────────────────────────────────
+function extractNetwork(title) {
+  if(!title) return 'UNKNOWN';
+  const parts=title.split(' : ');
+  if(parts.length>=2){
+    const n=parts[1].trim().toUpperCase();
+    const map={'CNN':'CNN','FOXNEWS':'FOX NEWS','FOX NEWS':'FOX NEWS','MSNBC':'MSNBC',
+      'CSPAN':'C-SPAN','CSPAN2':'C-SPAN','CNBC':'CNBC','HLN':'HLN',
+      'WRC':'NBC','WMAR':'ABC','WETA':'PBS','WHUT':'PBS','WTTG':'FOX',
+      'WJLA':'ABC','WJZ':'CBS','WBAL':'NBC','WBFF':'FOX','KGO':'ABC',
+      'KQED':'PBS','KNBC':'NBC','KABC':'ABC','KCBS':'CBS','KTTV':'FOX',
+      'WMAQ':'NBC','WLS':'ABC','WBBM':'CBS','WFLD':'FOX','KDFW':'FOX',
+      'WFAA':'ABC','KXAS':'NBC','KTVT':'CBS','WTVJ':'NBC','WPLG':'ABC',
+      'WFOR':'CBS','WSVN':'FOX','WFDC':'UNIVISION','KCAL':'CBS'};
+    return map[n]||n;
+  }
+  return 'UNKNOWN';
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='guide' && !guideLoaded) loadGuide();
+}
+
+// ─── YEAR FILTER ──────────────────────────────────────────────────────────────
 function populateYearFilter(items) {
-  const years = [...new Set(items.map(i => getYear(i)).filter(y => y !== '—'))].sort().reverse();
-  const sel = document.getElementById('year-select');
-  sel.innerHTML = '<option value="all">All Years</option>';
-  years.forEach(y => {
-    const opt = document.createElement('option');
-    opt.value = y; opt.textContent = y;
-    sel.appendChild(opt);
-  });
+  const years=[...new Set(items.map(i=>getYear(i)).filter(y=>y!=='—'))].sort().reverse();
+  const sel=document.getElementById('year-select');
+  sel.innerHTML='<option value="all">All Years</option>';
+  years.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y;sel.appendChild(o);});
 }
-
 function filterByYear(year) {
-  const filtered = year === 'all' ? allNewsItems : allNewsItems.filter(i => String(getYear(i)) === year);
-  renderCards(filtered, 'news-cards', false);
+  const f=year==='all'?allNewsItems:allNewsItems.filter(i=>String(getYear(i))===year);
+  renderCards(f,'news-cards',false);
 }
 
-// ─── HISTORICAL TICKER ───────────────────────────────────────────────────────
-// Build "MARCH 6, 1991: CNN Gulf War coverage" style headlines from real titles
-function buildHistoricalTicker(items) {
-  if (!items || items.length === 0) return;
-  const headlines = items.slice(0, 12).map(item => {
-    const year = getYear(item);
-    const month = MONTHS_FULL[now.getMonth()].toUpperCase();
-    // Extract a clean headline from the Archive title
-    // Format is usually "Show Name : NETWORK : Month Day, YEAR time"
-    const titleParts = item.title.split(' : ');
-    const showName = titleParts[0] || item.title;
-    return `<span><span class="year-tag">${month} ${DAY}, ${year}:</span>${truncate(showName, 60)}</span>`;
+// ─── TICKER ───────────────────────────────────────────────────────────────────
+function buildTicker(items) {
+  if(!items||!items.length) return;
+  const headlines=items.slice(0,12).map(item=>{
+    const yr=getYear(item);
+    const show=(item.title.split(' : ')[0]||item.title);
+    return `<span><span class="year-tag">${MF[now.getMonth()].toUpperCase()} ${DAY}, ${yr}:</span>${trunc(show,60)}</span>`;
   });
-  // Double for seamless loop
-  const doubled = [...headlines, ...headlines];
-  document.getElementById('ticker-track').innerHTML = doubled.join('');
+  const doubled=[...headlines,...headlines];
+  document.getElementById('ticker-track').innerHTML=doubled.join('');
 }
 
-// ─── PLAYLIST ────────────────────────────────────────────────────────────────
-function buildPlaylist(newsItems, adItems) {
-  playlist = [];
-  let ai = 0;
-  for (let i = 0; i < newsItems.length; i++) {
-    playlist.push({ type: 'news', ...newsItems[i] });
-    if ((i + 1) % 2 === 0 && ai < adItems.length)
-      playlist.push({ type: 'commercial', ...adItems[ai++] });
+// ─── PLAYLIST ─────────────────────────────────────────────────────────────────
+function buildPlaylist(news, ads) {
+  playlist=[];
+  let ai=0;
+  for(let i=0;i<news.length;i++){
+    playlist.push({type:'news',...news[i]});
+    if((i+1)%2===0&&ai<ads.length) playlist.push({type:'commercial',...ads[ai++]});
   }
   renderQueue();
-  if (playlist.length > 0) playIndex(0);
+  if(playlist.length>0) playIndex(0);
 }
 
 function renderQueue() {
-  const container = document.getElementById('queue-items');
-  container.innerHTML = '';
-  if (playlist.length === 0) {
-    container.innerHTML = '<div style="padding:1rem;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:0.7rem;">NO ITEMS LOADED</div>';
-    return;
-  }
-  playlist.forEach((item, idx) => {
-    const isBreak = item.type === 'commercial';
-    const div = document.createElement('a');
-    div.href = '#';
-    div.className = 'queue-item' + (isBreak?' is-break':'') + (idx===currentIndex?' active':'');
-    div.onclick = e => { e.preventDefault(); playIndex(idx); };
-    div.innerHTML = `
+  const c=document.getElementById('queue-items');
+  c.innerHTML='';
+  if(!playlist.length){c.innerHTML='<div style="padding:1rem;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:0.7rem;">NO ITEMS</div>';return;}
+  playlist.forEach((item,idx)=>{
+    const isBreak=item.type==='commercial';
+    const d=document.createElement('a');
+    d.href='#'; d.className='queue-item'+(isBreak?' is-break':'')+(idx===currentIndex?' active':'');
+    d.onclick=e=>{e.preventDefault();playIndex(idx);};
+    const dur=fmtDuration(item.length);
+    d.innerHTML=`
       <div class="queue-thumb ${isBreak?'break-thumb':''}">
         ${guessEmoji(item.title)}
         <div class="queue-year">${getYear(item)}</div>
       </div>
       <div class="queue-info">
-        <div class="queue-network">${isBreak?'📺 COMMERCIAL BREAK':'📡 NEWS'}</div>
-        <div class="queue-title">${truncate(item.title,50)}</div>
-        <div class="queue-meta">${getYear(item)}</div>
+        <div class="queue-network">${isBreak?'📺 COMMERCIAL':'📡 '+extractNetwork(item.title)}</div>
+        <div class="queue-title">${trunc(item.title,50)}</div>
+        <div class="queue-meta">${getYear(item)}${dur?' · '+dur:''}</div>
       </div>`;
-    container.appendChild(div);
+    c.appendChild(d);
   });
 }
 
-// ─── PLAYBACK ────────────────────────────────────────────────────────────────
+// ─── PLAYBACK ─────────────────────────────────────────────────────────────────
 function playIndex(idx) {
-  if (idx >= playlist.length) return;
-  currentIndex = idx;
-  const item = playlist[idx];
+  if(idx>=playlist.length) return;
+  currentIndex=idx;
+  const item=playlist[idx];
   clearTimeout(breakTimer);
-
-  const breakOverlay = document.getElementById('break-overlay');
-  const mainIframe   = document.getElementById('main-iframe');
-  const breakIframe  = document.getElementById('break-iframe');
-
-  if (item.type === 'commercial') {
-    mainIframe.src = 'about:blank';
-    breakIframe.src = getEmbedUrl(item.identifier) + '?autoplay=1';
-    breakOverlay.classList.add('active');
-    document.getElementById('now-playing-label').textContent = '📺 Commercial Break';
-    document.getElementById('main-title').textContent = truncate(item.title, 80);
+  const bo=document.getElementById('break-overlay');
+  const mi=document.getElementById('main-iframe');
+  const bi=document.getElementById('break-iframe');
+  if(item.type==='commercial'){
+    mi.src='about:blank';
+    bi.src=embed(item.identifier)+'?autoplay=1';
+    bo.classList.add('active');
+    document.getElementById('now-playing-label').textContent='📺 Commercial Break';
+    document.getElementById('main-title').textContent=trunc(item.title,80);
     startBreakCountdown(90);
   } else {
-    breakOverlay.classList.remove('active');
-    breakIframe.src = 'about:blank';
-    mainIframe.src = getEmbedUrl(item.identifier) + '?autoplay=1';
-    document.getElementById('now-playing-label').textContent = '▶ Now Playing';
-    document.getElementById('main-title').textContent = truncate(item.title, 80);
+    bo.classList.remove('active');
+    bi.src='about:blank';
+    mi.src=embed(item.identifier)+'?autoplay=1';
+    document.getElementById('now-playing-label').textContent='▶ Now Playing';
+    const dur=fmtDuration(item.length);
+    document.getElementById('main-title').textContent=trunc(item.title,80)+(dur?' ['+dur+']':'');
   }
-
-  document.querySelectorAll('.queue-item').forEach((el,i) => el.classList.toggle('active', i===idx));
-  // Scroll active item into view
-  const activeEl = document.querySelector('.queue-item.active');
-  if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+  document.querySelectorAll('.queue-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  const ae=document.querySelector('.queue-item.active');
+  if(ae) ae.scrollIntoView({block:'nearest'});
 }
-
 function startBreakCountdown(secs) {
-  const el = document.getElementById('break-countdown');
-  const tick = () => {
-    el.textContent = `Resuming in ${secs}s`;
-    if (secs-- > 0) breakTimer = setTimeout(tick, 1000);
-    else skipBreak();
-  };
+  const el=document.getElementById('break-countdown');
+  const tick=()=>{el.textContent=`Resuming in ${secs}s`;if(secs-->0)breakTimer=setTimeout(tick,1000);else skipBreak();};
   tick();
 }
-
 function skipBreak() {
   clearTimeout(breakTimer);
   document.getElementById('break-overlay').classList.remove('active');
-  document.getElementById('break-iframe').src = 'about:blank';
-  playIndex(currentIndex + 1);
+  document.getElementById('break-iframe').src='about:blank';
+  playIndex(currentIndex+1);
 }
 
-// ─── CARDS ───────────────────────────────────────────────────────────────────
+// ─── CARDS ────────────────────────────────────────────────────────────────────
 function renderCards(items, containerId, isBreak) {
-  const container = document.getElementById(containerId);
-  if (!items || items.length === 0) {
-    container.innerHTML = `<div class="no-results">NO RESULTS FOUND</div>`;
-    return;
-  }
-  const row = document.createElement('div');
-  row.className = 'cards-row';
-  items.forEach(item => {
-    const year  = getYear(item);
-    const emoji = guessEmoji(item.title, item.subject);
-    const a = document.createElement('a');
-    a.href = '#';
-    a.className = 'card' + (isBreak?' break-card':'');
-    a.onclick = e => { e.preventDefault(); openModal(item, isBreak); };
-    a.innerHTML = `
+  const c=document.getElementById(containerId);
+  if(!items||!items.length){c.innerHTML='<div class="no-results">NO RESULTS FOUND</div>';return;}
+  const row=document.createElement('div'); row.className='cards-row';
+  items.forEach(item=>{
+    const year=getYear(item); const emoji=guessEmoji(item.title,item.subject);
+    const dur=fmtDuration(item.length); const full=isFullLength(item);
+    const a=document.createElement('a'); a.href='#';
+    a.className='card'+(isBreak?' break-card':'');
+    a.onclick=e=>{e.preventDefault();openModal(item,isBreak);};
+    a.innerHTML=`
       <div class="card-thumb ${isBreak?'break-bg':''}">
         <span>${emoji}</span>
         <div class="card-year-badge ${isBreak?'break':''}">${year}</div>
+        ${dur?`<div class="card-duration">${dur}</div>`:''}
+        ${full&&!isBreak?'<div style="position:absolute;top:6px;right:6px;background:rgba(76,175,80,0.2);border:1px solid #4caf50;color:#4caf50;font-family:\'Share Tech Mono\',monospace;font-size:0.55rem;padding:1px 4px;">FULL</div>':''}
       </div>
       <div class="card-body">
-        <div class="card-network">${isBreak?'📺 COMMERCIAL':'📡 BROADCAST'}</div>
-        <div class="card-title">${truncate(item.title,55)}</div>
-        <div class="card-date">${item.date ? item.date.slice(0,10) : year}</div>
+        <div class="card-network">${isBreak?'📺 COMMERCIAL':'📡 '+extractNetwork(item.title)}</div>
+        <div class="card-title">${trunc(item.title,55)}</div>
+        <div class="card-date">${item.date?item.date.slice(0,10):year}</div>
       </div>`;
     row.appendChild(a);
   });
-  container.innerHTML = '';
-  container.appendChild(row);
+  c.innerHTML=''; c.appendChild(row);
 }
 
-// ─── MODAL ───────────────────────────────────────────────────────────────────
-function openModal(item, isBreak) {
-  document.getElementById('modal-iframe').src    = getEmbedUrl(item.identifier) + '?autoplay=1';
-  document.getElementById('modal-network').textContent = isBreak ? '📺 Vintage Commercial' : '📡 News Broadcast';
-  document.getElementById('modal-title').textContent   = item.title || 'Untitled';
-  document.getElementById('modal-meta').innerHTML =
-    (item.date ? item.date.slice(0,10) : getYear(item)) +
-    ` <a href="${getArchiveUrl(item.identifier)}" target="_blank">↗ View on Archive.org</a>`;
-  document.getElementById('modal-desc').textContent =
-    item.description ? truncate(item.description.replace(/<[^>]+>/g,''), 300) : '';
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal(event) {
-  if (!event || event.target === document.getElementById('modal')) {
-    document.getElementById('modal-iframe').src = 'about:blank';
-    document.getElementById('modal').classList.remove('open');
-  }
-}
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
-
-// ─── STATUS ──────────────────────────────────────────────────────────────────
-function setStatus(which, state, text) {
-  document.getElementById(which+'-dot').className = 'api-dot ' + state;
-  document.getElementById(which+'-status-text').textContent = text;
-}
-function errorMsg() {
-  return `<div class="no-results" style="color:var(--accent2);">ARCHIVE UNREACHABLE — Check server logs.</div>`;
-}
-
-// ─── MAIN FETCH ──────────────────────────────────────────────────────────────
-async function loadAll() {
-  const mm = String(MONTH).padStart(2,'0');
-  const dd = String(DAY).padStart(2,'0');
-
-  setStatus('news','loading',`Searching Archive for ${MONTHS_FULL[now.getMonth()]} ${DAY} broadcasts...`);
-  setStatus('ad','loading','Fetching vintage American commercials...');
+// ─── GUIDE ────────────────────────────────────────────────────────────────────
+async function loadGuide() {
+  guideLoaded=true;
+  setStatus('guide','loading','Loading program guide...');
+  const wrap=document.getElementById('guide-wrap');
 
   try {
-    let newsItems = [], adItems = [];
+    const r=await fetch(`${API_BASE}/guide`,{signal:AbortSignal.timeout(20000)});
+    if(!r.ok) throw new Error('Guide endpoint returned '+r.status);
+    const data=await r.json();
 
-    // 1. Backend proxy
-    try {
-      const r = await fetch(`${API_BASE}/today`, { signal: AbortSignal.timeout(15000) });
-      if (r.ok) { const d = await r.json(); newsItems = d.news||[]; adItems = d.commercials||[]; }
-    } catch(e) { /* fall through */ }
-
-    // 2. Direct fallback
-    if (newsItems.length === 0) {
-      const ranges = [];
-      for (let y = 1980; y <= 2015; y++)
-        ranges.push(`date:[${y}-${mm}-${dd}T00:00:00Z TO ${y}-${mm}-${dd}T23:59:59Z]`);
-      const q = `collection:tvnews AND (${ranges.join(' OR ')})`;
-      const r = await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(q)}&fl[]=identifier,title,date,description,subject,year&rows=40&output=json&sort[]=date+desc`);
-      const d = await r.json();
-      newsItems = d.response?.docs || [];
-    }
-    if (adItems.length === 0) {
-      const r = await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent('collection:classic_tv_commercials')}&fl[]=identifier,title,date,description,subject,year&rows=24&output=json`);
-      const d = await r.json();
-      adItems = d.response?.docs || [];
+    if(!data.networks||!data.networks.length){
+      wrap.innerHTML='<div class="no-results">No guide data available for this date.</div>';
+      setStatus('guide','error','No data found');
+      return;
     }
 
-    // Filter to American content
-    newsItems = newsItems.filter(isAmerican);
-    adItems   = adItems.filter(isAmerican);
+    setStatus('guide','live',`${data.networks.length} networks · ${data.total} broadcasts found`);
 
-    // Store full list for year filter
-    allNewsItems = newsItems;
+    wrap.innerHTML='';
+    data.networks.forEach(({name,items})=>{
+      const netClass='net-'+name.replace(/\s+/g,'\\ ');
+      const section=document.createElement('div');
+      section.className=`network-row ${netClass}`;
+      const fullCount=items.filter(i=>isFullLength(i)).length;
+      section.innerHTML=`
+        <div class="network-header">
+          <div class="network-logo">${name}</div>
+          <div class="network-count">${items.length} broadcast${items.length!==1?'s':''} on this date${fullCount>0?' · '+fullCount+' full-length':''}</div>
+        </div>
+        <div class="network-scroll" id="net-${name.replace(/\s/g,'-')}"></div>`;
+      wrap.appendChild(section);
 
-    // Populate year dropdown
-    populateYearFilter(newsItems);
-
-    // Render
-    renderCards(newsItems, 'news-cards', false);
-    setStatus('news', newsItems.length>0?'live':'error',
-      newsItems.length>0
-        ? `${newsItems.length} American broadcasts found for ${MONTHS_FULL[now.getMonth()]} ${DAY}`
-        : 'No broadcasts found for this date');
-
-    renderCards(adItems, 'ad-cards', true);
-    setStatus('ad', adItems.length>0?'live':'error',
-      adItems.length>0 ? `${adItems.length} vintage commercials loaded` : 'No commercials found');
-
-    // Ticker with real historical headlines
-    buildHistoricalTicker(newsItems);
-
-    // Build autoplay playlist
-    buildPlaylist(newsItems.slice(0,8), adItems.slice(0,4));
+      const scroll=section.querySelector('.network-scroll');
+      items.forEach(item=>{
+        const year=getYear(item); const emoji=guessEmoji(item.title,item.subject);
+        const dur=fmtDuration(item.length); const full=isFullLength(item);
+        const a=document.createElement('a'); a.href='#'; a.className='guide-card';
+        a.onclick=e=>{e.preventDefault();openModal(item,false);};
+        a.innerHTML=`
+          <div class="guide-card-thumb">
+            <span>${emoji}</span>
+            <div class="guide-card-year">${year}</div>
+            ${dur?`<div class="guide-card-duration">${dur}</div>`:''}
+            ${full?'<div class="guide-card-full-badge">FULL</div>':''}
+          </div>
+          <div class="guide-card-body">
+            <div class="guide-card-title">${trunc(item.title.split(' : ')[0],35)}</div>
+            <div class="guide-card-date">${item.date?item.date.slice(0,10):year}</div>
+          </div>`;
+        scroll.appendChild(a);
+      });
+    });
 
   } catch(err) {
     console.error(err);
-    setStatus('news','error','Could not reach Internet Archive: '+err.message);
-    setStatus('ad','error','Could not load commercials.');
-    document.getElementById('news-cards').innerHTML = errorMsg();
-    document.getElementById('ad-cards').innerHTML   = errorMsg();
+    wrap.innerHTML='<div class="no-results" style="color:var(--accent2);">Could not load guide — '+err.message+'</div>';
+    setStatus('guide','error','Failed to load');
+  }
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(item,isBreak) {
+  document.getElementById('modal-iframe').src=embed(item.identifier)+'?autoplay=1';
+  document.getElementById('modal-network').textContent=isBreak?'📺 Vintage Commercial':'📡 '+extractNetwork(item.title);
+  document.getElementById('modal-title').textContent=item.title||'Untitled';
+  const dur=fmtDuration(item.length);
+  document.getElementById('modal-meta').innerHTML=
+    (item.date?item.date.slice(0,10):getYear(item))+(dur?' · <strong style="color:var(--accent)">'+dur+'</strong>':'')+
+    ` <a href="${detail(item.identifier)}" target="_blank">↗ View on Archive.org</a>`;
+  document.getElementById('modal-desc').textContent=item.description?trunc(item.description.replace(/<[^>]+>/g,''),300):'';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) {
+  if(!e||e.target===document.getElementById('modal')){
+    document.getElementById('modal-iframe').src='about:blank';
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ─── STATUS ───────────────────────────────────────────────────────────────────
+function setStatus(which,state,text) {
+  const dot=document.getElementById(which+'-dot');
+  const span=document.getElementById(which+'-status-text');
+  if(dot) dot.className='api-dot '+state;
+  if(span) span.textContent=text;
+}
+
+// ─── MAIN LOAD ────────────────────────────────────────────────────────────────
+async function loadAll() {
+  const mm=String(MONTH).padStart(2,'0'), dd=String(DAY).padStart(2,'0');
+  setStatus('news','loading',`Searching Archive for ${MF[now.getMonth()]} ${DAY}...`);
+  setStatus('ad','loading','Fetching vintage commercials...');
+
+  try {
+    let news=[], ads=[];
+    try {
+      const r=await fetch(`${API_BASE}/today`,{signal:AbortSignal.timeout(15000)});
+      if(r.ok){const d=await r.json();news=d.news||[];ads=d.commercials||[];}
+    } catch(e){}
+
+    if(!news.length){
+      const ranges=[];
+      for(let y=1980;y<=2015;y++) ranges.push(`date:[${y}-${mm}-${dd}T00:00:00Z TO ${y}-${mm}-${dd}T23:59:59Z]`);
+      const q=`collection:tvnews AND (${ranges.join(' OR ')})`;
+      const r=await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(q)}&fl[]=identifier,title,date,description,subject,year,length&rows=40&output=json&sort[]=date+desc`);
+      const d=await r.json(); news=(d.response?.docs||[]).filter(isAmerican);
+    }
+    if(!ads.length){
+      const r=await fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent('collection:classic_tv_commercials')}&fl[]=identifier,title,date,description,subject,year,length&rows=24&output=json`);
+      const d=await r.json(); ads=(d.response?.docs||[]).filter(isAmerican);
+    }
+
+    allNewsItems=news;
+    populateYearFilter(news);
+    renderCards(news,'news-cards',false);
+    setStatus('news',news.length?'live':'error',
+      news.length?`${news.length} American broadcasts · ${news.filter(isFullLength).length} full-length`:'No broadcasts found');
+
+    renderCards(ads,'ad-cards',true);
+    setStatus('ad',ads.length?'live':'error',ads.length?`${ads.length} vintage commercials`:'No commercials found');
+
+    buildTicker(news);
+    buildPlaylist(news.slice(0,8),ads.slice(0,4));
+
+  } catch(err) {
+    console.error(err);
+    setStatus('news','error','Error: '+err.message);
+    setStatus('ad','error','Error: '+err.message);
   }
 }
 
