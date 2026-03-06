@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIRDATE — This Day in News History</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #e8c84a;
+    --accent2: #e05a2b;
+    --text: #d8d8e8;
+    --muted: #666680;
+    --scan: rgba(255,255,255,0.015);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scan) 2px, var(--scan) 4px);
+  }
+
+  /* HEADER */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 64px; border-bottom: 1px solid var(--border);
+    background: var(--surface); position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.12em; color: var(--accent); text-shadow: 0 0 20px rgba(232,200,74,0.4); }
+  .logo span { color: var(--accent2); }
+  .live-badge { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
+  .live-dot { width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .header-date { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--muted); text-align: right; }
+  .header-date strong { display: block; color: var(--text); font-size: 0.85rem; }
+
+  /* TICKER */
+  .ticker-wrap { background: var(--accent); color: #000; height: 32px; overflow: hidden; display: flex; align-items: center; }
+  .ticker-label { background: var(--accent2); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.1em; padding: 0 1rem; height: 100%; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+  .ticker-inner { overflow: hidden; flex: 1; }
+  .ticker-track { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
+  .ticker-track span { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding-right: 4rem; }
+  .ticker-track span::before { content: '◆ '; opacity: 0.5; }
+  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  /* LAYOUT */
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+  /* FEATURED */
+  .featured { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; margin-bottom: 3rem; }
+  .player-wrap { position: relative; background: #000; border: 1px solid var(--border); aspect-ratio: 16/9; overflow: hidden; }
+  .player-wrap::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 70%, rgba(0,0,0,0.6) 100%); pointer-events: none; z-index: 2; }
+  .player-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .player-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 1.2rem; background: linear-gradient(transparent, rgba(0,0,0,0.9)); z-index: 3; }
+  .now-playing { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
+  .player-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+
+  /* COMMERCIAL BREAK OVERLAY */
+  .break-overlay {
+    display: none; position: absolute; inset: 0; background: #000; z-index: 10;
+    flex-direction: column; align-items: center; justify-content: center;
+  }
+  .break-overlay.active { display: flex; }
+  .break-overlay iframe { width: 100%; height: 100%; border: 0; }
+  .break-banner {
+    position: absolute; top: 0; left: 0; right: 0;
+    background: var(--accent2); padding: 0.3rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    color: #fff; letter-spacing: 0.1em; z-index: 1;
+  }
+  .break-countdown { color: var(--accent); font-weight: bold; }
+
+  /* QUEUE */
+  .queue { display: flex; flex-direction: column; border: 1px solid var(--border); overflow: hidden; max-height: 500px; overflow-y: auto; }
+  .queue-header { background: var(--surface); padding: 0.75rem 1rem; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.15em; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; position: sticky; top: 0; z-index: 1; }
+  .queue-header span { color: var(--accent); }
+  .queue-item { display: flex; align-items: center; gap: 0.9rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; background: var(--card); text-decoration: none; color: inherit; }
+  .queue-item:last-child { border-bottom: 0; }
+  .queue-item:hover { background: #1e1e2a; }
+  .queue-item.active { background: #1a1a28; border-left: 3px solid var(--accent); }
+  .queue-item.is-break { border-left: 3px solid var(--accent2); }
+  .queue-thumb { width: 90px; height: 54px; background: #000; flex-shrink: 0; position: relative; overflow: hidden; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  .queue-thumb.break-thumb { background: linear-gradient(135deg, #1a0800 0%, #2a1000 100%); }
+  .queue-year { position: absolute; bottom: 2px; right: 4px; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent); background: rgba(0,0,0,0.8); padding: 1px 3px; }
+  .queue-info { flex: 1; min-width: 0; }
+  .queue-network { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.15rem; }
+  .queue-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+  .queue-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+
+  /* SECTION HEADERS */
+  .section-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.2rem; margin-top: 2.5rem; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text); }
+  .section-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
+
+  /* CARDS */
+  .cards-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 0.5rem; }
+  .card { background: var(--card); cursor: pointer; transition: background 0.15s; text-decoration: none; color: inherit; display: block; }
+  .card:hover { background: #1e1e2a; }
+  .card:hover .card-title { color: var(--accent); }
+  .card.break-card:hover .card-title { color: var(--accent2); }
+  .card-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #0d0d15 0%, #1a1a28 100%); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .card-thumb.break-bg { background: linear-gradient(135deg, #120800 0%, #1f1000 100%); }
+  .card-year-badge { position: absolute; top: 8px; left: 8px; border: 1px solid var(--accent); color: var(--accent); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; padding: 2px 6px; background: rgba(0,0,0,0.85); }
+  .card-year-badge.break { border-color: var(--accent2); color: var(--accent2); }
+  .card-body { padding: 0.8rem; border-top: 1px solid var(--border); }
+  .card-network { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; font-weight: 700; line-height: 1.3; transition: color 0.15s; margin-bottom: 0.3rem; }
+  .card-date { font-size: 0.72rem; color: var(--muted); }
+
+  /* LOADING STATE */
+  .loading-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .loading-card { background: var(--card); aspect-ratio: 16/9; position: relative; overflow: hidden; }
+  .loading-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+
+  /* API STATUS */
+  .api-status { display: flex; align-items: center; gap: 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .api-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .api-dot.live { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
+  .api-dot.loading { background: var(--accent); animation: pulse 1s infinite; }
+  .api-dot.error { background: var(--accent2); }
+
+  /* MODAL */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 500; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); width: 100%; max-width: 900px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.6rem; cursor: pointer; z-index: 10; transition: all 0.15s; }
+  .modal-close:hover { color: var(--text); border-color: var(--text); }
+  .modal-player { aspect-ratio: 16/9; background: #000; }
+  .modal-player iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .modal-info { padding: 1.2rem; }
+  .modal-network { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+  .modal-meta { font-size: 0.8rem; color: var(--muted); }
+  .modal-meta a { color: var(--accent); text-decoration: none; margin-left: 1rem; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; }
+  .modal-meta a:hover { text-decoration: underline; }
+  .modal-desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; line-height: 1.6; max-height: 80px; overflow-y: auto; }
+
+  /* TODAY BANNER */
+  .today-banner { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .today-label { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: var(--accent); }
+  .today-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; }
+  .today-date { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); }
+
+  /* FOOTER */
+  footer { margin-top: 4rem; padding: 2rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--muted); letter-spacing: 0.1em; }
+  .footer-note { font-size: 0.72rem; color: var(--muted); max-width: 500px; line-height: 1.6; text-align: right; }
+  .footer-note a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .featured { grid-template-columns: 1fr; }
+    .queue { display: none; }
+  }
+  @media (max-width: 600px) {
+    .container { padding: 1rem; }
+    header { padding: 0 1rem; }
+    .header-date { display: none; }
+    .cards-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AIR<span>DATE</span></div>
+  <div class="live-badge"><div class="live-dot"></div> Live from the Archive</div>
+  <div class="header-date"><span>Broadcast Date</span><strong id="header-date">—</strong></div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker-label">◀ HEADLINES</div>
+  <div class="ticker-inner">
+    <div class="ticker-track" id="ticker-track">
+      <span>Loading today's broadcast schedule from the Internet Archive</span>
+      <span>AIRDATE — Real news, real commercials, from this day in history</span>
+      <span>Loading today's broadcast schedule from the Internet Archive</span>
+      <span>AIRDATE — Real news, real commercials, from this day in history</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="today-banner">
+    <div class="today-label" id="today-label">—</div>
+    <div>
+      <div class="today-sub">Broadcasts from</div>
+      <div class="today-date" id="today-date">This Day In History</div>
+    </div>
+  </div>
+
+  <!-- FEATURED PLAYER -->
+  <div class="featured">
+    <div class="player-wrap" id="main-player-wrap">
+      <iframe id="main-iframe" src="about:blank" allowfullscreen allow="fullscreen"></iframe>
+      <!-- COMMERCIAL BREAK OVERLAY -->
+      <div class="break-overlay" id="break-overlay">
+        <div class="break-banner">
+          <span>📺 &nbsp;COMMERCIAL BREAK</span>
+          <span class="break-countdown" id="break-countdown"></span>
+        </div>
+        <iframe id="break-iframe" src="about:blank" allowfullscreen allow="fullscreen"></iframe>
+      </div>
+      <div class="player-overlay" id="player-overlay">
+        <div class="now-playing"><div class="live-dot"></div> <span id="now-playing-label">Loading...</span></div>
+        <div class="player-title" id="main-title">Connecting to Internet Archive...</div>
+      </div>
+    </div>
+
+    <div class="queue" id="queue">
+      <div class="queue-header"><span>▶</span> <span id="queue-header-text">TODAY'S SCHEDULE</span></div>
+      <div id="queue-items">
+        <div style="padding:1.5rem; text-align:center; color:var(--muted); font-family:'Share Tech Mono',monospace; font-size:0.7rem;">
+          LOADING SCHEDULE...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS SECTION -->
+  <div class="api-status" id="news-api-status">
+    <div class="api-dot loading" id="news-dot"></div>
+    <span id="news-status-text">Querying Internet Archive for news broadcasts...</span>
+  </div>
+  <div class="section-header">
+    <div class="section-title">News Broadcasts</div>
+    <div class="section-sub" id="news-section-sub">This date across all years</div>
+  </div>
+  <div id="news-cards">
+    <div class="loading-row">
+      <div class="loading-card"></div><div class="loading-card"></div>
+      <div class="loading-card"></div><div class="loading-card"></div>
+    </div>
+  </div>
+
+  <!-- COMMERCIALS SECTION -->
+  <div class="api-status" id="ad-api-status" style="margin-top:2rem;">
+    <div class="api-dot loading" id="ad-dot"></div>
+    <span id="ad-status-text">Fetching vintage commercials from the Archive...</span>
+  </div>
+  <div class="section-header">
+    <div class="section-title" style="color:var(--accent2);">📺 Commercial Breaks</div>
+    <div class="section-sub">A word from our sponsors — vintage ads</div>
+  </div>
+  <div id="ad-cards">
+    <div class="loading-row">
+      <div class="loading-card"></div><div class="loading-card"></div>
+      <div class="loading-card"></div><div class="loading-card"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
+    <div class="modal-player"><iframe id="modal-iframe" src="about:blank" allowfullscreen allow="fullscreen"></iframe></div>
+    <div class="modal-info">
+      <div class="modal-network" id="modal-network"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">AIRDATE © 2026</div>
+  <div class="footer-note">
+    All content sourced live from the <a href="https://archive.org" target="_blank">Internet Archive</a>.
+    Public domain and open-license broadcasts only. Not affiliated with any network.
+    <br>Built as a proof-of-concept. <a href="server-setup.md" target="_blank">↗ Server setup guide</a>
+  </div>
+</footer>
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// Point this at your backend once deployed. For local dev, use the proxy server.
+// When running index.html directly (no server), the app falls back to
+// querying archive.org directly from the browser (CORS permitting).
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000/api'
+  : '/api'; // your domain's backend
+
+// ─── DATE SETUP ──────────────────────────────────────────────────────────────
+const now = new Date();
+const MONTH = now.getMonth() + 1;
+const DAY   = now.getDate();
+const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const MONTHS_FULL  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+document.getElementById('today-label').textContent   = MONTHS_SHORT[now.getMonth()] + ' ' + DAY;
+document.getElementById('today-date').textContent    = MONTHS_FULL[now.getMonth()] + ' ' + DAY + ' — Across All Years';
+document.getElementById('header-date').textContent   = MONTHS_FULL[now.getMonth()] + ' ' + DAY;
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let playlist = []; // mixed news + commercial items
+let currentIndex = 0;
+let breakTimer = null;
+
+const EMOJI_MAP = { news: '📡', commercial: '📺', government: '🏛', space: '🌕', election: '🗳', war: '⚔️' };
+
+// ─── ARCHIVE.ORG SEARCH ──────────────────────────────────────────────────────
+async function fetchFromArchive(query, rows = 12, mediatype = 'movies') {
+  // Try backend proxy first (avoids CORS), fall back to direct
+  try {
+    const proxyUrl = `${API_BASE}/search?q=${encodeURIComponent(query)}&rows=${rows}&mediatype=${mediatype}`;
+    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(4000) });
+    if (res.ok) return await res.json();
+  } catch(e) { /* proxy not available, fall through */ }
+
+  // Direct Archive.org API (works from browser for most queries)
+  const url = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(query)}`
+    + `&fl[]=identifier,title,date,description,subject,mediatype,year`
+    + `&rows=${rows}&page=1&output=json&mediatype=${mediatype}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.response?.docs || [];
+}
+
+function getEmbedUrl(identifier) {
+  return `https://archive.org/embed/${identifier}`;
+}
+function getArchiveUrl(identifier) {
+  return `https://archive.org/details/${identifier}`;
+}
+function getThumbUrl(identifier) {
+  return `https://archive.org/services/img/${identifier}`;
+}
+function guessEmoji(title = '', subject = '') {
+  const t = (title + subject).toLowerCase();
+  if (t.includes('apollo') || t.includes('nasa') || t.includes('moon') || t.includes('space')) return '🌕';
+  if (t.includes('election') || t.includes('vote') || t.includes('president')) return '🗳';
+  if (t.includes('war') || t.includes('battle') || t.includes('military')) return '⚔️';
+  if (t.includes('senate') || t.includes('congress') || t.includes('government')) return '🏛';
+  if (t.includes('cnn') || t.includes('nbc') || t.includes('abc') || t.includes('cbs')) return '📡';
+  return '📺';
+}
+function truncate(str, n) {
+  if (!str) return '';
+  return str.length > n ? str.slice(0, n) + '…' : str;
+}
+function getYear(item) {
+  if (item.year) return item.year;
+  if (item.date) return item.date.slice(0, 4);
+  return '—';
+}
+
+// ─── BUILD PLAYLIST ──────────────────────────────────────────────────────────
+function buildPlaylist(newsItems, adItems) {
+  playlist = [];
+  // Interleave: 2 news, 1 commercial break, repeat
+  let ai = 0;
+  for (let i = 0; i < newsItems.length; i++) {
+    playlist.push({ type: 'news', ...newsItems[i] });
+    if ((i + 1) % 2 === 0 && ai < adItems.length) {
+      playlist.push({ type: 'commercial', ...adItems[ai++] });
+    }
+  }
+  renderQueue();
+  if (playlist.length > 0) playIndex(0);
+}
+
+// ─── QUEUE RENDER ────────────────────────────────────────────────────────────
+function renderQueue() {
+  const container = document.getElementById('queue-items');
+  container.innerHTML = '';
+  playlist.forEach((item, idx) => {
+    const isBreak = item.type === 'commercial';
+    const div = document.createElement('a');
+    div.href = '#';
+    div.className = 'queue-item' + (isBreak ? ' is-break' : '') + (idx === currentIndex ? ' active' : '');
+    div.onclick = (e) => { e.preventDefault(); playIndex(idx); };
+    div.innerHTML = `
+      <div class="queue-thumb ${isBreak ? 'break-thumb' : ''}">
+        ${guessEmoji(item.title)}
+        <div class="queue-year">${getYear(item)}</div>
+      </div>
+      <div class="queue-info">
+        <div class="queue-network">${isBreak ? '📺 COMMERCIAL BREAK' : '📡 NEWS'}</div>
+        <div class="queue-title">${truncate(item.title, 50)}</div>
+        <div class="queue-meta">${getYear(item)}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+// ─── PLAYBACK ────────────────────────────────────────────────────────────────
+function playIndex(idx) {
+  currentIndex = idx;
+  const item = playlist[idx];
+  if (!item) return;
+
+  clearTimeout(breakTimer);
+  const breakOverlay = document.getElementById('break-overlay');
+  const mainIframe   = document.getElementById('main-iframe');
+  const breakIframe  = document.getElementById('break-iframe');
+
+  if (item.type === 'commercial') {
+    // Show break overlay
+    mainIframe.src = 'about:blank';
+    breakIframe.src = getEmbedUrl(item.identifier) + '?autoplay=1';
+    breakOverlay.classList.add('active');
+    document.getElementById('now-playing-label').textContent = '📺 Commercial Break';
+    document.getElementById('main-title').textContent = item.title;
+
+    // Auto-advance after 90 seconds
+    let secs = 90;
+    const tick = () => {
+      document.getElementById('break-countdown').textContent = `Resuming in ${secs}s`;
+      if (secs-- > 0) breakTimer = setTimeout(tick, 1000);
+      else {
+        breakOverlay.classList.remove('active');
+        breakIframe.src = 'about:blank';
+        playIndex(currentIndex + 1);
+      }
+    };
+    tick();
+  } else {
+    breakOverlay.classList.remove('active');
+    breakIframe.src = 'about:blank';
+    mainIframe.src = getEmbedUrl(item.identifier) + '?autoplay=1';
+    document.getElementById('now-playing-label').textContent = '▶ Now Playing';
+    document.getElementById('main-title').textContent = truncate(item.title, 80);
+  }
+
+  // Update queue highlight
+  document.querySelectorAll('.queue-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+}
+
+// ─── CARD RENDER ─────────────────────────────────────────────────────────────
+function renderCards(items, containerId, isBreak = false) {
+  const container = document.getElementById(containerId);
+  if (!items || items.length === 0) {
+    container.innerHTML = `<div style="padding:1.5rem; color:var(--muted); font-family:'Share Tech Mono',monospace; font-size:0.7rem;">NO RESULTS FOUND FOR THIS DATE</div>`;
+    return;
+  }
+  const row = document.createElement('div');
+  row.className = 'cards-row';
+  items.forEach(item => {
+    const year = getYear(item);
+    const emoji = guessEmoji(item.title, item.subject);
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'card' + (isBreak ? ' break-card' : '');
+    a.onclick = (e) => { e.preventDefault(); openModal(item, isBreak); };
+    a.innerHTML = `
+      <div class="card-thumb ${isBreak ? 'break-bg' : ''}">
+        <span>${emoji}</span>
+        <div class="card-year-badge ${isBreak ? 'break' : ''}">${year}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-network">${isBreak ? '📺 COMMERCIAL' : '📡 BROADCAST'}</div>
+        <div class="card-title">${truncate(item.title, 55)}</div>
+        <div class="card-date">${item.date ? item.date.slice(0, 10) : year}</div>
+      </div>`;
+    row.appendChild(a);
+  });
+  container.innerHTML = '';
+  container.appendChild(row);
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function openModal(item, isBreak) {
+  document.getElementById('modal-iframe').src = getEmbedUrl(item.identifier) + '?autoplay=1';
+  document.getElementById('modal-network').textContent = isBreak ? '📺 Vintage Commercial' : '📡 News Broadcast';
+  document.getElementById('modal-title').textContent = item.title || 'Untitled';
+  document.getElementById('modal-meta').innerHTML =
+    (item.date ? item.date.slice(0,10) : getYear(item)) +
+    ` <a href="${getArchiveUrl(item.identifier)}" target="_blank">↗ View on Archive.org</a>`;
+  document.getElementById('modal-desc').textContent = item.description
+    ? truncate(item.description.replace(/<[^>]+>/g,''), 300)
+    : '';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(event) {
+  if (!event || event.target === document.getElementById('modal')) {
+    document.getElementById('modal-iframe').src = 'about:blank';
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── TICKER UPDATE ───────────────────────────────────────────────────────────
+function updateTicker(items) {
+  if (!items || items.length === 0) return;
+  const texts = items.slice(0, 8).map(i => truncate(i.title, 80));
+  const doubled = [...texts, ...texts];
+  const track = document.getElementById('ticker-track');
+  track.innerHTML = doubled.map(t => `<span>${t}</span>`).join('');
+}
+
+// ─── MAIN FETCH ──────────────────────────────────────────────────────────────
+async function loadAll() {
+  const monthPadded = String(MONTH).padStart(2, '0');
+  const dayPadded   = String(DAY).padStart(2, '0');
+  const datePattern = `-${monthPadded}-${dayPadded}`;
+
+  // --- NEWS ---
+  setStatus('news', 'loading', `Searching Archive for broadcasts on this date...`);
+  try {
+    // Query 1: date-specific news
+    const newsQuery = `date:${datePattern} AND (mediatype:movies) AND (subject:"news" OR subject:"television" OR title:"news" OR title:"report" OR collection:tvarchive)`;
+    let newsItems = await fetchFromArchive(newsQuery, 16);
+
+    // If sparse, broaden to month/genre
+    if (newsItems.length < 4) {
+      const broadQuery = `(subject:"news broadcast" OR subject:"television news" OR collection:tvarchive) AND mediatype:movies`;
+      const extra = await fetchFromArchive(broadQuery, 12);
+      newsItems = [...newsItems, ...extra].slice(0, 16);
+    }
+
+    renderCards(newsItems, 'news-cards', false);
+    setStatus('news', 'live', `${newsItems.length} broadcasts found via Internet Archive API`);
+    updateTicker(newsItems);
+
+    // --- COMMERCIALS ---
+    setStatus('ad', 'loading', 'Fetching vintage commercials...');
+    const adQuery = `(subject:"commercials" OR subject:"television commercials" OR subject:"advertisements" OR collection:classic_tv_commercials) AND mediatype:movies`;
+    let adItems = await fetchFromArchive(adQuery, 12);
+
+    if (adItems.length < 4) {
+      const adQuery2 = `collection:classic_tv_commercials`;
+      adItems = await fetchFromArchive(adQuery2, 12);
+    }
+
+    renderCards(adItems, 'ad-cards', true);
+    setStatus('ad', 'live', `${adItems.length} vintage commercials loaded`);
+
+    // Build the autoplay playlist
+    buildPlaylist(newsItems.slice(0, 8), adItems.slice(0, 4));
+
+  } catch (err) {
+    console.error(err);
+    setStatus('news', 'error', 'Could not reach Internet Archive. Check connection.');
+    setStatus('ad', 'error', 'Could not load commercials.');
+    document.getElementById('news-cards').innerHTML = errorMsg();
+    document.getElementById('ad-cards').innerHTML   = errorMsg();
+  }
+}
+
+function setStatus(which, state, text) {
+  const dot  = document.getElementById(which + '-dot');
+  const span = document.getElementById(which + '-status-text');
+  dot.className = 'api-dot ' + state;
+  span.textContent = text;
+}
+
+function errorMsg() {
+  return `<div style="padding:1.5rem; color:var(--accent2); font-family:'Share Tech Mono',monospace; font-size:0.7rem;">
+    ARCHIVE UNREACHABLE — Run the backend proxy server for best results.<br>
+    See <strong>server-setup.md</strong> for instructions.
+  </div>`;
+}
+
+loadAll();
+</script>
+</body>
+</html>
