@@ -133,8 +133,8 @@ app.get('/api/today', async (req, res) => {
     .join(' OR ');
 
   const newsQuery   = `collection:tvnews AND (${dateRanges})`;
-  const adQuery     = `collection:tvarchive AND (subject:"commercial" OR subject:"advertisement" OR title:"commercial")`;
-  const adFallback  = `subject:"television commercial" OR subject:"TV commercial" OR subject:"vintage commercial"`;
+  const adQuery     = `collection:classic_tv_commercials`;
+  const adFallback  = `collection:prelinger AND (subject:"advertising" OR subject:"commercials")`;
 
   const FIELDS = 'identifier,title,date,description,subject,year';
   const BASE   = 'https://archive.org/advancedsearch.php';
